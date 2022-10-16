@@ -31,12 +31,15 @@ def gcd(a, b):
 
 
 # RSA encrypt function
-def rsa_encrypt(no, p, q):
+def rsa_encrypt(m, p, q):
+    # nếu là số nguyên tố.
     if isprime(p) and isprime(q):
-        n = p * q
+        n = p * q  # n là môđun cho mã hóa và giải mã.
         t = (p - 1) * (q - 1)
 
+        # chọn e sao cho e và t không có nhân tử chung
         for e in range(2, t):
+            # tính gcd
             if gcd(e, t) == 1:
                 break
 
@@ -46,8 +49,10 @@ def rsa_encrypt(no, p, q):
                 d = int(x / e)
                 break
 
+        # tìm bản mã
         ctt = Decimal(0)
-        ctt = pow(no, e)
+        # ctt = m ^ e mod n
+        ctt = pow(m, e)
         ct = ctt % n
 
         return int(ct)
@@ -63,12 +68,14 @@ def rsa_decrypt(ct, p, q):
             if gcd(e, t) == 1:
                 break
 
+        # Xác định khóa riêng d
         for i in range(1, 10):
             x = 1 + i * t
             if x % e == 0:
                 d = int(x / e)
                 break
 
+        # tìm văn bản thuần túy
         dtt = Decimal(0)
         dtt = pow(ct, d)
         dt = dtt % n
@@ -97,6 +104,7 @@ def encrypt(request):
         print("height: ", height, "-----", type(height))
 
         # k: màu đỏ, xanh lục và xanh lam.
+        # Tính toán ra list sau đó chuyển sang mảng để tiếp tục đi mã hóa
         img_array_duplicate = [[[img_array[i][j][k] for k in range(0, 3)] for j in range(0, width)] for i in
                                range(0, height)]
         print("img_array_duplicate: ", type(img_array_duplicate))
@@ -106,7 +114,8 @@ def encrypt(request):
         for i in range(0, height):
             for j in range(0, width):
                 for k in range(0, 3):
-                    img_array_duplicate[i][j][k] = rsa_encrypt(int(img_array_duplicate[i][j][k]), p, q)  # vidu: (56,7,37)
+                    img_array_duplicate[i][j][k] = rsa_encrypt(int(img_array_duplicate[i][j][k]), p,
+                                                               q)  # vidu: (56,7,37)
 
         encrypted_img = Image.fromarray(img_array_duplicate, 'RGB')
         encrypted_img.save(os.path.join("media", 'encrypted.jpg'))
@@ -143,6 +152,8 @@ def decrypt(request):
 
         decrypted_img = Image.fromarray(img_array_duplicate, 'RGB')
         decrypted_img.save(os.path.join("media", 'decrypted.jpg'))
-        fs.delete(uploaded_file_name)
+        # fs.delete(uploaded_file_name)
+        if os.path.join("media", 'decrypted.jpg'):
+            fs.delete(uploaded_file_name)
 
     return render(request, 'output2.html', {'msg': "Decrypted image is ready"})
