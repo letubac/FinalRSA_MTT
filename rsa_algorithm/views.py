@@ -64,6 +64,7 @@ def rsa_decrypt(ct, p, q):
         n = p * q
         t = (p - 1) * (q - 1)
 
+        # chọn e sao cho e và t không có nhân tử chung ngoại trừ 1
         for e in range(2, t):
             if gcd(e, t) == 1:
                 break
