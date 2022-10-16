@@ -10,7 +10,7 @@ import os
 
 # Create your views here.
 
-# Set values for p and q (Two prime numbers)
+# Set values for p and q (2 số nguyên tố)
 p = 7
 q = 37
 
@@ -78,26 +78,35 @@ def rsa_decrypt(ct, p, q):
 
 def encrypt(request):
     if request.method == 'POST':
+        # upload file lên server
         uploaded_file = request.FILES['input_image']
         uploaded_file_name = uploaded_file.name
         uploaded_file_size = uploaded_file.size
+        print("uploaded_file_size: ", uploaded_file_size)
 
+        # Lưu trữ tệp trên cục bộ: mặc định là media_root, media_url
         fs = FileSystemStorage()
-        fs.save(uploaded_file_name, uploaded_file)
+        fs.save(uploaded_file_name, uploaded_file)  # name, content, size
         # fs.save("original.jpg",uploaded_file)
 
-        img = Image.open(os.path.join("media", uploaded_file_name))
-        img_array = np.array(img)
+        img = Image.open(os.path.join("media", uploaded_file_name))  # nối đường dẫn
+        img_array = np.array(img)  # chuyển đổi ảnh PIL thành mảng
+        print("img_array: ", img_array)
         width, height = img.size
+        print("width: ", width, "-----", type(width))
+        print("height: ", height, "-----", type(height))
 
+        # k: màu đỏ, xanh lục và xanh lam.
         img_array_duplicate = [[[img_array[i][j][k] for k in range(0, 3)] for j in range(0, width)] for i in
                                range(0, height)]
+        print("img_array_duplicate: ", type(img_array_duplicate))
         img_array_duplicate = np.array(img_array_duplicate)
-
+        print("img_array_duplicate: ", img_array_duplicate)
+        print("int(img_array_duplicate[i][j][k]: ", int(img_array_duplicate[0][2][0]))
         for i in range(0, height):
             for j in range(0, width):
                 for k in range(0, 3):
-                    img_array_duplicate[i][j][k] = rsa_encrypt(int(img_array_duplicate[i][j][k]), p, q)
+                    img_array_duplicate[i][j][k] = rsa_encrypt(int(img_array_duplicate[i][j][k]), p, q)  # vidu: (56,7,37)
 
         encrypted_img = Image.fromarray(img_array_duplicate, 'RGB')
         encrypted_img.save(os.path.join("media", 'encrypted.jpg'))
