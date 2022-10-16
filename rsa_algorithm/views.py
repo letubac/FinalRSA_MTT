@@ -37,7 +37,7 @@ def rsa_encrypt(m, p, q):
         n = p * q  # n là môđun cho mã hóa và giải mã.
         t = (p - 1) * (q - 1)
 
-        # chọn e sao cho e và t không có nhân tử chung
+        # chọn e sao cho e và t không có nhân tử chung ngoại trừ 1
         for e in range(2, t):
             # tính gcd
             if gcd(e, t) == 1:
@@ -51,7 +51,7 @@ def rsa_encrypt(m, p, q):
 
         # tìm bản mã
         ctt = Decimal(0)
-        # ctt = m ^ e mod n
+        # ct = m ^ e mod n
         ctt = pow(m, e)
         ct = ctt % n
 
@@ -77,6 +77,7 @@ def rsa_decrypt(ct, p, q):
 
         # tìm văn bản thuần túy
         dtt = Decimal(0)
+        # dt = ct ^ d mod n
         dtt = pow(ct, d)
         dt = dtt % n
 
