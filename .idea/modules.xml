@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Image-Encryption-and-Decryption-Using-RSA-Algorithm-master.iml" filepath="$PROJECT_DIR$/.idea/Image-Encryption-and-Decryption-Using-RSA-Algorithm-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FinalRSA_MTT.iml" filepath="$PROJECT_DIR$/.idea/FinalRSA_MTT.iml" />
     </modules>
   </component>
 </project>
